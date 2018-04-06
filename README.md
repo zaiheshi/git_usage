@@ -4,15 +4,183 @@
 - 在本地新建test目录并切换到该目录`mkdir test&&cd test`
 
 - 初始化  
-  `git init`
+`git init`
 - 查看status  
-  `git status`
+`git status`
 - 添加到文件到暂存区  
-  `git add filename`  
-  `git add -A`
+`git add filename`  
+`git add -A`
 - 提交  
-  `git commit -m "commit message"`
+`git commit -m "commit message"`
 
 ### git remote
 - 介绍  
 为了便于管理，Git要求每个远程主机都必须指定一个主机名。git remote命令就用于管理主机名。
+- 列出远程库的名字  
+`git remote`  
+`git remote -v`
+- 添加远程仓库，一旦添加以后别名就代表远程库的版本库地址，name可以直接使用  
+`git remote add name url `  
+`本例中git remote add origin git@github.com:zaiheshi/test.git`  
+- 删除添加的远程库
+`git remote remove name `  
+- 重命名远程库  
+`git remote rename 原名字 新名字`  
+- 查看指定主机的详细信息  
+` git remote show 主机名`  
+
+### git push
+```
+git push命令用于将本地分支的更新，推送到远程主机。它的格式与git pull命令相仿。
+
+$ git push <远程主机名> <本地分支名>:<远程分支名>
+注意，分支推送顺序的写法是<来源地>:<目的地>，所以git pull是<远程分支>:<本地分支>，而git push是<本地分支>:<远程分支>。
+
+如果省略远程分支名，则表示将本地分支推送与之存在”追踪关系”的远程分支(通常两者同名)，如果该远程分支不存在，则会被新建。
+
+$ git push origin master
+上面命令表示，将本地的master分支推送到origin主机的master分支。如果后者不存在，则会被新建。
+
+如果省略本地分支名，则表示删除指定的远程分支，因为这等同于推送一个空的本地分支到远程分支。
+
+$ git push origin :master
+# 等同于
+$ git push origin --delete master
+上面命令表示删除origin主机的master分支。
+
+如果当前分支与远程分支之间存在追踪关系，则本地分支和远程分支都可以省略。
+
+$ git push origin
+上面命令表示，将当前分支推送到origin主机的对应分支。
+
+如果当前分支只有一个追踪分支，那么主机名都可以省略。
+
+$ git push
+如果当前分支与多个主机存在追踪关系，则可以使用-u选项指定一个默认主机，这样后面就可以不加任何参数使用git push。
+
+$ git push -u origin master
+上面命令将本地的master分支推送到origin主机，同时指定origin为默认主机，后面就可以不加任何参数使用git push了。
+
+不带任何参数的git push，默认只推送当前分支，这叫做simple方式。此外，还有一种matching方式，会推送所有有对应的远程分支的本地分支。Git 2.0版本之前，默认采用matching方法，现在改为默认采用simple方式。如果要修改这个设置，可以采用git config命令。
+
+$ git config --global push.default matching
+# 或者
+$ git config --global push.default simple
+还有一种情况，就是不管是否存在对应的远程分支，将本地的所有分支都推送到远程主机，这时需要使用–all选项。
+
+$ git push --all origin
+上面命令表示，将所有本地分支都推送到origin主机。
+
+如果远程主机的版本比本地版本更新，推送时Git会报错，要求先在本地做git pull合并差异，然后再推送到远程主机。这时，如果你一定要推送，可以使用–force选项。
+
+
+$ git push --force origin
+上面命令使用–force选项，结果导致在远程主机产生一个”非直进式”的合并(non-fast-forward merge)。除非你很确定要这样做，否则应该尽量避免使用–force选项。
+
+最后，git push不会推送标签(tag)，除非使用–tags选项。
+
+$ git push origin --tags
+
+有时候当远程xxx分支被删掉了后，用git branch -a 你还可以看到本地还有remote/origin/xxx这个分支，那么你可以使用git fetch -p 这个命令可以帮你同步最新的远程分支，并删掉本地被删了的远程分支
+```
+
+### git branch
+- 本地新建分支并切换到该分支 
+`git checkout -b branchname`
+- 本地新建分支
+`git branch branchname`
+- 列出所有分支包括远程主机
+`git branch -a`
+- 列出本地分支
+`git branch`
+- 切换分支
+`git checkout branchname`
+- 删除本地分支
+`git branch -d  branchName `
+- 强制删除本地分支(注意：在删除本地分支的时候要切换到其他分支)
+`git  branch -D branchName`
+
+### git从已有分支拉新分支开发
+```
+1. 切换到被copy的分支（master），并且从远端拉取最新版本
+
+$git checkout master
+
+$git pull
+
+
+
+2. 从当前分支拉copy开发分支
+
+$git checkout -b dev
+
+Switched to a new branch 'dev'
+
+
+
+3. 把新建的分支push到远端
+$git push origin dev
+
+
+
+4. 拉取远端分支
+$git pull
+
+There is no tracking information for the current branch.
+Please specify which branch you want to merge with.
+See git-pull(1) for details.
+
+git pull <remote> <branch>
+
+If you wish to set tracking information for this branch you can do so with:
+
+git branch --set-upstream-to=origin/<branch> dev
+
+经过验证，当前的分支并没有和本地分支关联，根据提示进行下一步：
+
+
+5. 关联
+
+$git branch --set-upstream-to=origin/dev
+
+注意：这里branch之后都是没有空格的，如果有空格则是错误命令
+
+
+
+6. 再次拉取 验证
+
+$git pull
+
+OK 到此搞定 结束！
+
+
+
+/*****************************************************/
+
+1、从远程拉取分支到本地(当远程已经有分支的时候可以这样用)
+
+[html] view plain copy
+git checkout -b 本地分支名x origin/远程分支名x  
+
+2、提交本地test分支作为远程的test分支（合并分支后可以用）
+
+git push origin test:test   // 提交本地test分支 作为远程的test分支
+
+
+
+简单总结：
+
+其实在git中要注意如下几点：
+
+第一点就是分支，git因分支而强大，所以要理解git中的分支，我们在一个远程服务下可以拉多个分支，比如生产主分支、测试分支、每个人的开发分支。
+
+第二点就是本地和远程，当我们在本地建了一个新分支有，还要把新分支推到远程也就是在远程建立一样的一个分支。所以我们在本地和远程建立分支后还要把他们关联起来，这样才有意义！！！
+
+第三点 git远程服务和git远程分支，某一个或某几个分支是在一个服务下的，就好比A项目在远程的服务是a那么在a服务下我们可以创建 master、test、dev多个测试分支。其实一个远程服务就是一个project因为在github或gitlab都是创建project。
+
+第四点 当我们从master分支上拉开发分支，我们在自己的开发分支上pull的时候会吧别人提交到master分支的代码回pull下来，而push的时候还是提交到了自己的开发分支，除非你把自己的开发分支合并到了master分支上。
+```
+
+### git merge
+- git merge
+- git merge --no-ff -m " message " branchname
