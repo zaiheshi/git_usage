@@ -99,6 +99,8 @@ $ git push origin --tags
 `git branch -d  branchName `
 - 强制删除本地分支(注意：在删除本地分支的时候要切换到其他分支)
 `git  branch -D branchName`
+- 查看关联
+`git branch -vv`
 
 ### git从已有分支拉新分支开发
 ```
