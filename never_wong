@@ -1,0 +1,5 @@
+1. git fetch origin
+2. git checkout -b branch origin/branch
+3. git checkout branch
+4. git pull
+
