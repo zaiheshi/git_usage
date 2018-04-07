@@ -3,3 +3,10 @@
 3. git checkout branch
 4. git pull
 
+
+git submodule add url添加子项目
+克隆含有子项目的项目  git clone --recursive url
+若使用git clone url则子项目文件夹为空，需用git submodule init 与 git submodule update
+
+记住若修改子项目，一定先push子项目后才能push主项目，其余操作应该相同
+
