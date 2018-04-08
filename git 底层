@@ -1,0 +1,95 @@
+git add test.txt  //新建test.txt，内容为version 1
+83baae 是blob 对象 内容为version 1
+---------------------------------------------------------------
+git commit -m "first commit"
+58f562 是commit对象， 含有提交信息 tree->d8329f
+d8329f 是tree对象，含有文件名test.txt，以及该文件名指向文件内容的指针83baa1
+--------------------------------------------------------------------
+git add a.txt, b.txt   //新建a.txt内容为aaa , b.txt内容为bbb
+72943a  blob   aaa
+
+f761ec  blob bbb
+--------------------------------------------------------------
+git commit -m "second commit"
+6da114 tree   a.txt b.txt test.txt 
+
+
+942834  commit tree->6da114  parent->58f562 second commit
+-----------------------------------------------------------
+git add c.txt   //新建c.txt 内容为cccc
+28924d blob cccc
+
+-----------------------------------------------------------
+git commit -m "third commit"
+7ffbe4  tree    a.txt b.txt c.txt test.txt
+
+d57e5a   commit   tree->7ffbe4  parent->942832  third commit
+
+----------------------------------------------------------------------
+git rm c.txt  //index变了,猜测
+------------------------------------------------------
+git commit -m "four commit"   //可以看到tree并未被创建而是指向了先前的内容，原因是没有必要再新建一个，或者说新建出来的tree和之前的tree一模一样
+
+a8ddae commit tree->6da114 parent->d57e5a
+----------------------------------------------------------
+git add test.txt  //增删内容 
+b951d1 blob   //保存了test.txt的内容
+-----------------------------------------------------------
+git commit -m "five commit"
+
+07fea0 tree a.txt b.txt test.txt  
+02691e commit tree->07fea0 parent->a8ddae
+-----------------------------------------------------------
+git add -A // mkdir scala cd scala vim sky.txt<-sky
+f5e95e blob  sky
+---------------------------------------------------
+git commit -m "six commit"
+
+10b1fb tree a.txt b.txt scala(tree)->53a674 test.txt
+53a674 tree sky.txt
+f52260 commit tree->10b1fb parent->02691e
+
+
+
+通常 Git 根据你的暂存区域或 index 来创建并写入一个 tree ,因此要创建一个 tree 对象的话首先要通过将一些文件暂存从而创建一个 index ,git add后仅仅创建blob对象记录了文件的内容，而所对应的文件名应该在index中，之后git commit创建了tree(由index而来) 以及commit 对象, 另外每次commit在tree对象中记录当前所有文件名（应该叫做快照)
+
+git add 新文件/增改的文件    会为该文件(目录不包括在内)单独创建一个blob对象， 记载了该文件的全部内容，并更新索引
+git rm 文件  		  更新索引
+
+git commit     		必定创建一个commit对象, 包含本次提交的信息， 还有两个指针，其中一个指向上次提交的commit对象(初次提交除外),另一个指向tree对象， tree对象可能不会被创建(已经存在，无必要继续创建，如以上的删除文件)，可能被创建多个(如果增加了目录，如上)， tree对象包含了一系列文件名以及指向文件内容blob对象的指针，也可能包含tree对象(如上)
+
+由此可以轻易回到上次提交的状态， git add /git rm 的操作也很容易撤销
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
