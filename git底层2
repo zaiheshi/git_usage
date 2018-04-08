@@ -1,0 +1,10 @@
+.git/logs/HEAD:记载了每一次commit 、 checkout 、 create branch 
+.git/logs/refs/heads/master 记载了master分支的commit
+.git/logs/refs/heads/branch1 记载了branch1分支的commit
+git log 应该是读取.git/logs/HEAD 把所有分支的commit按时间顺序排列
+删除branch1后 .git/logs/refs/heads/branch1  .git/refs/heads/branch1会被删掉， 而.git/logs/HEAD依然在，可以通过它恢复
+git checkout -b branch1 commit-id
+
+.git/HEAD 指向当前分支 例如.git/refs/heads/master
+
+.git/refs/heads/master指向master分支最后一次提交的id
