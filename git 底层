@@ -60,6 +60,11 @@ git commit     		必定创建一个commit对象, 包含本次提交的信息， 
 
 由此可以轻易回到上次提交的状态， git add /git rm 的操作也很容易撤销
 
+Git 以对象类型为起始内容构造一个文件头，本例中是一个 blob。然后添加一个空格，接着是数据内容的长度，最后是一个空字节 (null byte)：
+>> header = "blob #{content.length}\0"
+=> "blob 16\000"   Git 将文件头与原始数据内容拼接起来，并计算拼接后的新内容的 SHA-1 校验和
+参考链接 https://git-scm.com/book/zh/v1/Git-%E5%86%85%E9%83%A8%E5%8E%9F%E7%90%86-Git-%E5%AF%B9%E8%B1%A1
+
 
 
 
